@@ -537,12 +537,32 @@
     .footer-dot { width: 5px; height: 5px; border-radius: 50%; }
 
     /* ── RESPONSIVE ── */
+    .nav-hamburger {
+      display: none; flex-direction: column; gap: 5px;
+      background: none; border: none; cursor: pointer; padding: 6px;
+    }
+    .nav-hamburger span { display: block; width: 22px; height: 2px; background: var(--ink); border-radius: 2px; transition: all 0.3s; }
+    .nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+    .nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+    .mobile-menu {
+      display: none; position: fixed; top: 60px; left: 0; right: 0; z-index: 99;
+      background: rgba(244,247,252,0.97); backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--line);
+      flex-direction: column; padding: 16px 24px 24px; gap: 4px;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a { font-size: 16px; font-weight: 500; color: var(--steel); padding: 12px 16px; border-radius: var(--r-md); transition: all 0.2s; }
+    .mobile-menu a:hover { background: var(--ice); color: var(--ink); }
+    .mobile-menu-divider { height: 1px; background: var(--line); margin: 8px 0; }
+    .mobile-menu .mobile-cta { background: var(--ink); color: white !important; text-align: center; border-radius: 999px; margin-top: 8px; font-weight: 600 !important; }
+
     @media (max-width: 900px) {
       .hero-inner { grid-template-columns: 1fr; }
       .profile-card { display: none; }
       .impact-grid { grid-template-columns: repeat(2, 1fr); }
       .expertise-grid { grid-template-columns: 1fr; }
-      .strength-list { grid-template-columns: 1fr; }
+      .strength-list { grid-template-columns: repeat(2, 1fr); }
       .timeline-line { display: none; }
       .job { grid-template-columns: 1fr; }
       .job-meta { text-align: left; padding-top: 0; margin-bottom: 6px; }
@@ -550,12 +570,23 @@
       .skills-layout { grid-template-columns: 1fr; }
       .edu-grid { grid-template-columns: 1fr; }
       .contact-card { grid-template-columns: 1fr; }
+      .nav-links, .nav-cta { display: none; }
+      .nav-hamburger { display: flex; }
     }
     @media (max-width: 600px) {
       .impact-grid { grid-template-columns: 1fr; }
-      .hero-stats { flex-direction: column; gap: 20px; }
-      .nav-links { display: none; }
+      .hero-stats { flex-direction: row; flex-wrap: wrap; gap: 20px; }
+      .hero-stats > div { flex: 1 1 40%; }
+      .strength-list { grid-template-columns: 1fr; }
+      .hero-actions { flex-direction: column; }
+      .hero-actions a { justify-content: center; }
+      .contact-btns { flex-direction: column; }
+      .btn-contact { text-align: center; justify-content: center; }
+      .expertise-card { padding: 24px 20px; }
+      .job-body { padding: 20px; }
+      .impact-cell { padding: 28px 20px; }
     }
+    @media (hover: none) { #cursor-dot, #cursor-ring { display: none; } }
   </style>
 </head>
 <body>
@@ -579,8 +610,22 @@
         <a href="#education">Education</a>
       </div>
       <a href="mailto:prasoon305@gmail.com" class="nav-cta">Get in Touch</a>
+      <button class="nav-hamburger" id="hamburger" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
     </div>
   </nav>
+
+  <!-- MOBILE MENU -->
+  <div class="mobile-menu" id="mobile-menu">
+    <a href="#impact" onclick="closeMobileMenu()">Impact</a>
+    <a href="#expertise" onclick="closeMobileMenu()">Expertise</a>
+    <a href="#experience" onclick="closeMobileMenu()">Experience</a>
+    <a href="#skills" onclick="closeMobileMenu()">Skills</a>
+    <a href="#education" onclick="closeMobileMenu()">Education</a>
+    <div class="mobile-menu-divider"></div>
+    <a href="mailto:prasoon305@gmail.com" class="mobile-cta" onclick="closeMobileMenu()">Get in Touch</a>
+  </div>
 
   <!-- HERO -->
   <section class="hero" id="hero">
@@ -996,6 +1041,21 @@
   </footer>
 
   <script>
+    // Hamburger menu
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobile-menu');
+    hamburger.addEventListener('click', () => {
+      hamburger.classList.toggle('open');
+      mobileMenu.classList.toggle('open');
+    });
+    function closeMobileMenu() {
+      hamburger.classList.remove('open');
+      mobileMenu.classList.remove('open');
+    }
+    document.addEventListener('click', e => {
+      if (!hamburger.contains(e.target) && !mobileMenu.contains(e.target)) closeMobileMenu();
+    });
+
     // Cursor follower
     const dot = document.getElementById('cursor-dot');
     const ring = document.getElementById('cursor-ring');
